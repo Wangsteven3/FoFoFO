@@ -1,5 +1,7 @@
 function [T] = FoFoFo(C, Sx, Sy, X, Y, L)
 
+disp("EK301, Section A5, Group FoFoFo: Steven Wang, Kevin Chin, Linden Adamson, Joseph Cinquemani")
+
 % {
 % Matrix dimentions:
 % C = j * m
@@ -54,7 +56,7 @@ T = A \ L; %functionally the same but faster than inv(A) * L
 l = X*Y; % matrix location for live load to be applied (might need to assign new matrix)
 Wl = l*norm(L); % magnitude of the live load applied to joint l (I asumme magnitude of the load vector L in previous)
 
-%Using linearity x & y value of Wl to find Rm (B)
+%Using linearity x & y value of Wl to find Rm is (B) where y = mx + b
 p = polyfit(Wl(:,0), Wl(0,:), 1); 
 mx = p(1);
 B = p(2);
