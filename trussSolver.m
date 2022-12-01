@@ -1,6 +1,3 @@
-%to run just copy paste:
-%TrussDesign1_LindenJosephStephenKevin_A5
-
 %{
 matrix dimentions
 C = j * m
@@ -64,7 +61,16 @@ T = A \ L; %functionally the same but faster than inv(A) * L
 Wl = sum(L); %magnitute of the live load
 R = T / Wl; %finds each member's R value
 R = R(1:end - 3); %get rid of the pin and roller tension values
-Wf = abs(- Pcrit ./ R); %finds each member's faliure load, abs to compare properly
+Wf = - Pcrit ./ R; %finds each member's faliure load
+maxPcrit = max(Wf); %to make sure certain members are ignored in the calculation for weakest
+for i = 1:cols %Only members in compression will bend, so weed out any in tension
+    if (Wf(i) <= 0) || (Wf(i) <= (Wl / 1000))
+        %(Wf(i) <= 0) tests for members in tension
+        %(Wf(i) <= (Wl / 1000)) tests for members with negligible forces
+        %aka zero force members that matlab still calculates a value for
+        Wf(i) = maxPcrit; %replaces them both with the max Pcrit value so they wont be picked
+    end
+end
 critVal = min(Wf); %finds breaking point of weakest link
 critMember = Wf == critVal; %finds weakest link
 critMember = find(critMember);
